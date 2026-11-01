@@ -156,7 +156,14 @@ export default function Page() {
             ],
           },
         ]}
-        bottomLine="© TUM.ai"
+        bottomLine={
+          <>
+            <span>© TUM.ai</span>
+            <TextLink href="https://www.tum-ai.com/imprint" emphasis="muted">
+              Imprint
+            </TextLink>
+          </>
+        }
       />
     </>
   );
