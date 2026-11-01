@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TUM.ai Summit
 
-## Getting Started
+Landing page for the **TUM.ai Summit** in San Francisco. The event has two tracks: talks and panels
+with German founders, operators and investors who built in the Bay, and a hackathon where builders
+from TUM.ai and the Bay Area ship real products in one weekend.
 
-First, run the development server:
+**Live:** https://summit.tum-ai.com
+
+## Stack
+
+- [Next.js 16](https://nextjs.org) App Router, statically exported (`output: "export"`)
+- React 19 and Tailwind CSS 4
+- [`@tum.ai/ui-kit`](https://www.npmjs.com/package/@tum.ai/ui-kit), the TUM.ai design system
+  (sections, cards, header and footer)
+- Hosted on Vercel (team `tum-ai`, project `summit`)
+
+> Next.js 16 breaks several APIs from earlier versions. Read [`AGENTS.md`](AGENTS.md) before you
+> change framework code.
+
+## Getting started
+
+Requires Node.js 22 or newer.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+npm run dev    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Command         | What it does                                        |
+| --------------- | --------------------------------------------------- |
+| `npm run dev`   | Dev server with hot reload                          |
+| `npm run build` | Static export to `out/`                             |
+| `npm run lint`  | ESLint (Next.js core-web-vitals + TypeScript rules) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/          root layout, the page, global styles
+components/   page-specific sections: hero, about, people marquee
+content/      event.ts, all page copy and data
+lib/          asset() helper for files in public/
+public/       images: people/, logos/, hero and brand assets
+```
 
-## Learn More
+## Editing content
 
-To learn more about Next.js, take a look at the following resources:
+Almost every change happens in [`content/event.ts`](content/event.ts). It holds the hero copy, the
+stats (with their sources), tracks, partners, people and the contact address. Entries marked `TODO`
+are placeholders that still need confirming.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Add a person** (speaker, advisor, jury or organizer). Put their photo in `public/people/`, then add
+an entry to the matching list:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```ts
+{
+  name: "Ada Lovelace",
+  byline: "Founder, Example",
+  image: asset("/people/Ada.jpg"),
+  linkedin: "https://www.linkedin.com/in/…/",
+},
+```
 
-## Deploy on Vercel
+**Add a partner.** Put the logo SVG in `public/logos/`, then add an entry to `partners`. Set
+`aspectRatio` to the logo's width divided by its height. A logo that is only a mark, with no name in
+the artwork, also needs a `wordmark` so the name appears beside it.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Reference files in `public/` through `asset()`, never as bare `"/…"` strings, so paths keep working
+if the site is ever served under a sub-path.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+Vercel deploys the site through its GitHub integration:
+
+- A push to `main` deploys to production at https://summit.tum-ai.com.
+- A pull request or any other branch gets a preview deployment, linked on the PR.
+
+No environment variables are needed. `summit.tum-ai.com` is a CNAME to Vercel in the tum-ai.com
+zone, which is hosted on Netlify DNS.
