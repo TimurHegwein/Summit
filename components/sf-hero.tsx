@@ -20,7 +20,7 @@ export function SfHero({ title, tagline, lead, cta, partners }: SfHeroProps) {
       tone="night"
       spacing="none"
       aria-labelledby="hero-title"
-      className="flex min-h-[100svh] flex-col overflow-clip pt-[calc(var(--header-height)+clamp(4rem,12vh,9rem))]"
+      className="flex min-h-[100svh] flex-col overflow-clip pt-[calc(var(--header-height)+clamp(2rem,6vh,4rem))] md:pt-[calc(var(--header-height)+clamp(4rem,12vh,9rem))]"
     >
       <div aria-hidden className="sf-aperture-frame pointer-events-none absolute -z-10 aspect-[477/406] select-none">
         <div
